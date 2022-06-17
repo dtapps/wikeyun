@@ -8,49 +8,55 @@ import (
 	"gorm.io/gorm"
 )
 
-type App struct {
-	storeId      int            // 店铺ID
-	appKey       int            // key
-	appSecret    string         // secret
-	clientIp     string         // Ip
-	pgsql        *gorm.DB       // pgsql数据库
+type ConfigClient struct {
+	StoreId   int      // 店铺ID
+	AppKey    int      // key
+	AppSecret string   // secret
+	PgsqlDb   *gorm.DB // pgsql数据库
+}
+
+type Client struct {
 	client       *gorequest.App // 请求客户端
+	clientIp     string         // Ip
 	log          *golog.Api     // 日志服务
 	logTableName string         // 日志表名
 	logStatus    bool           // 日志状态
+	config       *ConfigClient
 }
 
-// NewApp 创建实例
-func NewApp(storeId, appKey int, appSecret string, pgsql *gorm.DB) *App {
-	app := &App{storeId: storeId, appKey: appKey, appSecret: appSecret}
-	app.client = gorequest.NewHttp()
-	if pgsql != nil {
-		app.pgsql = pgsql
-		app.logStatus = true
-		app.logTableName = "wikeyun"
-		app.log = golog.NewApi(&golog.ApiConfig{
-			Db:        pgsql,
-			TableName: app.logTableName,
+func NewClient(config *ConfigClient) *Client {
+
+	c := &Client{config: config}
+	c.config = config
+
+	c.client = gorequest.NewHttp()
+	if c.config.PgsqlDb != nil {
+		c.logStatus = true
+		c.logTableName = "wikeyun"
+		c.log = golog.NewApi(&golog.ApiConfig{
+			Db:        c.config.PgsqlDb,
+			TableName: c.logTableName,
 		})
 	}
 	xip := goip.GetOutsideIp()
 	if xip != "" && xip != "0.0.0.0" {
-		app.clientIp = xip
+		c.clientIp = xip
 	}
-	return app
+
+	return c
 }
 
 // 请求接口
-func (app *App) request(url string, params map[string]interface{}) (resp gorequest.Response, err error) {
+func (c *Client) request(url string, params map[string]interface{}) (resp gorequest.Response, err error) {
 
 	// 签名
-	sign := app.sign(params)
+	sign := c.sign(params)
 
 	// 创建请求
-	client := app.client
+	client := c.client
 
 	// 设置请求地址
-	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, app.appKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
+	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, c.config.AppKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
 
 	// 设置FORM格式
 	client.SetContentTypeForm()
@@ -65,8 +71,8 @@ func (app *App) request(url string, params map[string]interface{}) (resp goreque
 	}
 
 	// 日志
-	if app.logStatus == true {
-		go app.postgresqlLog(request)
+	if c.logStatus == true {
+		go c.postgresqlLog(request)
 	}
 
 	return request, err
