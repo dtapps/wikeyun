@@ -28,7 +28,7 @@ type RestRechargeQueryResult struct {
 	Err    error                     // 错误
 }
 
-func NewRestRechargeQueryResult(result RestRechargeQueryResponse, body []byte, http gorequest.Response, err error) *RestRechargeQueryResult {
+func newRestRechargeQueryResult(result RestRechargeQueryResponse, body []byte, http gorequest.Response, err error) *RestRechargeQueryResult {
 	return &RestRechargeQueryResult{Result: result, Body: body, Http: http, Err: err}
 }
 
@@ -36,13 +36,13 @@ func NewRestRechargeQueryResult(result RestRechargeQueryResponse, body []byte, h
 // https://open.wikeyun.cn/#/apiDocument/9/document/299
 func (c *Client) RestRechargeQuery(orderNumber string) *RestRechargeQueryResult {
 	// 参数
-	param := NewParams()
+	param := gorequest.NewParams()
 	param.Set("order_number", orderNumber) // 平台订单号
-	params := c.NewParamsWith(param)
+	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request("https://router.wikeyun.cn/rest/Recharge/query", params)
+	request, err := c.request(apiUrl+"/rest/Recharge/query", params)
 	// 定义
 	var response RestRechargeQueryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return NewRestRechargeQueryResult(response, request.ResponseBody, request, err)
+	return newRestRechargeQueryResult(response, request.ResponseBody, request, err)
 }

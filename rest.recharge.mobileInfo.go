@@ -38,7 +38,7 @@ type RestRechargeMobileInfoResult struct {
 	Err    error                          // 错误
 }
 
-func NewRestRechargeMobileInfoResult(result RestRechargeMobileInfoResponse, body []byte, http gorequest.Response, err error) *RestRechargeMobileInfoResult {
+func newRestRechargeMobileInfoResult(result RestRechargeMobileInfoResponse, body []byte, http gorequest.Response, err error) *RestRechargeMobileInfoResult {
 	return &RestRechargeMobileInfoResult{Result: result, Body: body, Http: http, Err: err}
 }
 
@@ -46,13 +46,13 @@ func NewRestRechargeMobileInfoResult(result RestRechargeMobileInfoResponse, body
 // https://open.wikeyun.cn/#/apiDocument/9/document/374
 func (c *Client) RestRechargeMobileInfo(orderNumber string) *RestRechargeMobileInfoResult {
 	// 参数
-	param := NewParams()
+	param := gorequest.NewParams()
 	param.Set("order_number", orderNumber) // 平台单号
-	params := c.NewParamsWith(param)
+	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request("https://router.wikeyun.cn/rest/Recharge/mobileInfo", params)
+	request, err := c.request(apiUrl+"/rest/Recharge/mobileInfo", params)
 	// 定义
 	var response RestRechargeMobileInfoResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return NewRestRechargeMobileInfoResult(response, request.ResponseBody, request, err)
+	return newRestRechargeMobileInfoResult(response, request.ResponseBody, request, err)
 }

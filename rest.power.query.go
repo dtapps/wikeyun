@@ -28,7 +28,7 @@ type RestPowerQueryResult struct {
 	Err    error                  // 错误
 }
 
-func NewRestPowerQueryResult(result RestPowerQueryResponse, body []byte, http gorequest.Response, err error) *RestPowerQueryResult {
+func newRestPowerQueryResult(result RestPowerQueryResponse, body []byte, http gorequest.Response, err error) *RestPowerQueryResult {
 	return &RestPowerQueryResult{Result: result, Body: body, Http: http, Err: err}
 }
 
@@ -36,13 +36,13 @@ func NewRestPowerQueryResult(result RestPowerQueryResponse, body []byte, http go
 // https://open.wikeyun.cn/#/apiDocument/9/document/313
 func (c *Client) RestPowerQuery(orderNumber string) *RestPowerQueryResult {
 	// 参数
-	param := NewParams()
+	param := gorequest.NewParams()
 	param.Set("order_number", orderNumber) // 平台单号
-	params := c.NewParamsWith(param)
+	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request("https://router.wikeyun.cn/rest/Power/query", params)
+	request, err := c.request(apiUrl+"/rest/Power/query", params)
 	// 定义
 	var response RestPowerQueryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return NewRestPowerQueryResult(response, request.ResponseBody, request, err)
+	return newRestPowerQueryResult(response, request.ResponseBody, request, err)
 }

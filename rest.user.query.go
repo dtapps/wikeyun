@@ -23,7 +23,7 @@ type RestUserQueryResult struct {
 	Err    error                 // 错误
 }
 
-func NewRestUserQueryResult(result RestUserQueryResponse, body []byte, http gorequest.Response, err error) *RestUserQueryResult {
+func newRestUserQueryResult(result RestUserQueryResponse, body []byte, http gorequest.Response, err error) *RestUserQueryResult {
 	return &RestUserQueryResult{Result: result, Body: body, Http: http, Err: err}
 }
 
@@ -31,9 +31,9 @@ func NewRestUserQueryResult(result RestUserQueryResponse, body []byte, http gore
 // https://open.wikeyun.cn/#/apiDocument/10/document/336
 func (c *Client) RestUserQuery() *RestUserQueryResult {
 	// 请求
-	request, err := c.request("https://router.wikeyun.cn/rest/User/query", map[string]interface{}{})
+	request, err := c.request(apiUrl+"/rest/User/query", map[string]interface{}{})
 	// 定义
 	var response RestUserQueryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
-	return NewRestUserQueryResult(response, request.ResponseBody, request, err)
+	return newRestUserQueryResult(response, request.ResponseBody, request, err)
 }
