@@ -10,13 +10,14 @@ type RestRechargeQueryResponse struct {
 	Msg  string `json:"msg"`
 	Time string `json:"time"`
 	Data struct {
-		OrderNumber    string `json:"order_number"`
-		OrderNo        string `json:"order_no"`
-		Mobile         string `json:"mobile"`
-		Amount         int    `json:"amount"`
-		CostPrice      string `json:"cost_price"`
+		Id             uint   `json:"id"`
 		Fanli          string `json:"fanli"`
+		Amount         int64  `json:"amount"`
+		Mobile         string `json:"mobile"`
 		Status         int    `json:"status"`
+		OrderNo        string `json:"order_no"`
+		CostPrice      string `json:"cost_price"`
+		OrderNumber    string `json:"order_number"`
 		OrgOrderNumber string `json:"org_order_number"`
 	} `json:"data"`
 }

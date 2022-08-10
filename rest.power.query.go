@@ -10,13 +10,14 @@ type RestPowerQueryResponse struct {
 	Msg  string `json:"msg"`
 	Time string `json:"time"`
 	Data struct {
-		OrderNumber   string `json:"order_number"`
-		OrderNo       string `json:"order_no"`
-		CardId        string `json:"card_id"`
-		Amount        int    `json:"amount"`
-		CostPrice     string `json:"cost_price"`
+		Id            uint   `json:"id"`
 		Fanli         string `json:"fanli"`
+		Amount        int64  `json:"amount"`
 		Status        int    `json:"status"`
+		CardId        string `json:"card_id"`
+		OrderNo       string `json:"order_no"`
+		CostPrice     string `json:"cost_price"`
+		OrderNumber   string `json:"order_number"`
 		ArrivedAmount int64  `json:"arrived_amount"`
 	} `json:"data"`
 }
