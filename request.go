@@ -31,7 +31,7 @@ func (c *Client) request(url string, params map[string]interface{}) (gorequest.R
 
 	// 日志
 	if c.config.PgsqlDb != nil {
-		go c.log.GormMiddleware(request)
+		go c.log.GormMiddleware(request, Version)
 	}
 	if c.config.MongoDb != nil {
 		go c.log.MongoMiddleware(request)

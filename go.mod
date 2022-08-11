@@ -3,10 +3,10 @@ module go.dtapp.net/wikeyun
 go 1.19
 
 require (
-	go.dtapp.net/dorm v1.0.13
-	go.dtapp.net/goip v1.0.23
-	go.dtapp.net/golog v1.0.19
-	go.dtapp.net/gorequest v1.0.23
+	go.dtapp.net/dorm v1.0.14
+	go.dtapp.net/goip v1.0.24
+	go.dtapp.net/golog v1.0.21
+	go.dtapp.net/gorequest v1.0.24
 	go.dtapp.net/gostring v1.0.6
 	gorm.io/gorm v1.23.8
 )
@@ -20,7 +20,6 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-redis/redis/v9 v9.0.0-beta.2 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.10 // indirect
