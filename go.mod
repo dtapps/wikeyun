@@ -3,7 +3,7 @@ module go.dtapp.net/wikeyun
 go 1.19
 
 require (
-	go.dtapp.net/dorm v1.0.16
+	go.dtapp.net/dorm v1.0.17
 	go.dtapp.net/goip v1.0.24
 	go.dtapp.net/golog v1.0.22
 	go.dtapp.net/gorequest v1.0.24
