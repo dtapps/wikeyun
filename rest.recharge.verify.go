@@ -1,6 +1,7 @@
 package wikeyun
 
 import (
+	"context"
 	"encoding/json"
 	"go.dtapp.net/gorequest"
 )
@@ -24,7 +25,7 @@ func newRestRechargeVerifyResult(result RestRechargeVerifyResponse, body []byte,
 
 // RestRechargeVerify 话费充值验证
 // https://open.wikeyun.cn/#/apiDocument/9/document/405
-func (c *Client) RestRechargeVerify(mobile string, amount int64, rechargeType int) *RestRechargeVerifyResult {
+func (c *Client) RestRechargeVerify(ctx context.Context, mobile string, amount int64, rechargeType int) *RestRechargeVerifyResult {
 	// 参数
 	param := gorequest.NewParams()
 	param.Set("mobile", mobile)              // 需要充值的手机号
@@ -32,7 +33,7 @@ func (c *Client) RestRechargeVerify(mobile string, amount int64, rechargeType in
 	param.Set("recharge_type", rechargeType) // 充值类型
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(apiUrl+"/rest/Recharge/verify", params)
+	request, err := c.request(ctx, apiUrl+"/rest/Recharge/verify", params)
 	// 定义
 	var response RestRechargeVerifyResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

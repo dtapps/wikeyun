@@ -1,6 +1,7 @@
 package wikeyun
 
 import (
+	"context"
 	"encoding/json"
 	"go.dtapp.net/gorequest"
 )
@@ -35,13 +36,13 @@ func newRestRechargeQueryResult(result RestRechargeQueryResponse, body []byte, h
 
 // RestRechargeQuery 话费订单查询
 // https://open.wikeyun.cn/#/apiDocument/9/document/299
-func (c *Client) RestRechargeQuery(orderNumber string) *RestRechargeQueryResult {
+func (c *Client) RestRechargeQuery(ctx context.Context, orderNumber string) *RestRechargeQueryResult {
 	// 参数
 	param := gorequest.NewParams()
 	param.Set("order_number", orderNumber) // 平台订单号
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(apiUrl+"/rest/Recharge/query", params)
+	request, err := c.request(ctx, apiUrl+"/rest/Recharge/query", params)
 	// 定义
 	var response RestRechargeQueryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)

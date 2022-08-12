@@ -1,12 +1,13 @@
 package wikeyun
 
 import (
+	"context"
 	"fmt"
 	"go.dtapp.net/gorequest"
 )
 
 // 请求接口
-func (c *Client) request(url string, params map[string]interface{}) (gorequest.Response, error) {
+func (c *Client) request(ctx context.Context, url string, params map[string]interface{}) (gorequest.Response, error) {
 
 	// 签名
 	sign := c.sign(params)
@@ -31,7 +32,7 @@ func (c *Client) request(url string, params map[string]interface{}) (gorequest.R
 
 	// 日志
 	if c.config.PgsqlDb != nil {
-		go c.log.GormMiddleware(request, Version)
+		go c.log.GormMiddleware(ctx, request, Version)
 	}
 	if c.config.MongoDb != nil {
 		go c.log.MongoMiddleware(request)

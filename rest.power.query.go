@@ -1,6 +1,7 @@
 package wikeyun
 
 import (
+	"context"
 	"encoding/json"
 	"go.dtapp.net/gorequest"
 )
@@ -35,13 +36,13 @@ func newRestPowerQueryResult(result RestPowerQueryResponse, body []byte, http go
 
 // RestPowerQuery 电费订单查询
 // https://open.wikeyun.cn/#/apiDocument/9/document/313
-func (c *Client) RestPowerQuery(orderNumber string) *RestPowerQueryResult {
+func (c *Client) RestPowerQuery(ctx context.Context, orderNumber string) *RestPowerQueryResult {
 	// 参数
 	param := gorequest.NewParams()
 	param.Set("order_number", orderNumber) // 平台单号
 	params := gorequest.NewParamsWith(param)
 	// 请求
-	request, err := c.request(apiUrl+"/rest/Power/query", params)
+	request, err := c.request(ctx, apiUrl+"/rest/Power/query", params)
 	// 定义
 	var response RestPowerQueryResponse
 	err = json.Unmarshal(request.ResponseBody, &response)
