@@ -31,11 +31,8 @@ func (c *Client) request(ctx context.Context, url string, params map[string]inte
 	}
 
 	// 日志
-	if c.config.PgsqlDb != nil {
+	if c.config.GormClient.Db != nil {
 		go c.log.GormMiddleware(ctx, request, Version)
-	}
-	if c.config.MongoDb != nil {
-		go c.log.MongoMiddleware(ctx, request, Version)
 	}
 
 	return request, err
