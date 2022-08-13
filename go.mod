@@ -3,9 +3,9 @@ module go.dtapp.net/wikeyun
 go 1.19
 
 require (
-	go.dtapp.net/dorm v1.0.17
+	go.dtapp.net/dorm v1.0.19
 	go.dtapp.net/goip v1.0.25
-	go.dtapp.net/golog v1.0.24
+	go.dtapp.net/golog v1.0.26
 	go.dtapp.net/gorequest v1.0.26
 	go.dtapp.net/gostring v1.0.6
 	gorm.io/gorm v1.23.8
@@ -66,7 +66,7 @@ require (
 	go.dtapp.net/gojson v1.0.1 // indirect
 	go.dtapp.net/gorandom v1.0.1 // indirect
 	go.dtapp.net/gotime v1.0.5 // indirect
-	go.dtapp.net/gotrace_id v1.0.0 // indirect
+	go.dtapp.net/gotrace_id v1.0.2 // indirect
 	go.dtapp.net/gourl v1.0.0 // indirect
 	go.dtapp.net/goxml v1.0.1 // indirect
 	go.mongodb.org/mongo-driver v1.10.1 // indirect
