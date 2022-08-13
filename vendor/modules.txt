@@ -226,7 +226,7 @@ github.com/youmark/pkcs8
 # go.dtapp.net/dorm v1.0.17
 ## explicit; go 1.19
 go.dtapp.net/dorm
-# go.dtapp.net/goip v1.0.24
+# go.dtapp.net/goip v1.0.25
 ## explicit; go 1.19
 go.dtapp.net/goip
 go.dtapp.net/goip/ip2region
