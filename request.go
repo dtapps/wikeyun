@@ -13,7 +13,7 @@ func (c *Client) request(ctx context.Context, url string, params map[string]inte
 	sign := c.sign(params)
 
 	// 创建请求
-	client := c.client
+	client := c.requestClient
 
 	// 设置请求地址
 	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, c.config.AppKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
@@ -32,7 +32,7 @@ func (c *Client) request(ctx context.Context, url string, params map[string]inte
 
 	// 日志
 	if c.config.GormClient.Db != nil {
-		go c.log.GormMiddleware(ctx, request, Version)
+		go c.logClient.GormMiddleware(ctx, request, Version)
 	}
 
 	return request, err

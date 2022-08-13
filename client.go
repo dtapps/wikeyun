@@ -17,10 +17,10 @@ type ConfigClient struct {
 	LogDebug   bool             // 日志开关
 }
 type Client struct {
-	client   *gorequest.App   // 请求客户端
-	clientIp string           // Ip
-	log      *golog.ApiClient // 日志服务
-	config   *ConfigClient
+	requestClient *gorequest.App   // 请求服务
+	logClient     *golog.ApiClient // 日志服务
+	clientIp      string           // 当前Ip
+	config        *ConfigClient    // 配置
 }
 
 func NewClient(config *ConfigClient) (*Client, error) {
@@ -28,10 +28,10 @@ func NewClient(config *ConfigClient) (*Client, error) {
 	var err error
 	c := &Client{config: config}
 
-	c.client = gorequest.NewHttp()
+	c.requestClient = gorequest.NewHttp()
 
 	if c.config.GormClient.Db != nil {
-		c.log, err = golog.NewApiClient(&golog.ApiClientConfig{
+		c.logClient, err = golog.NewApiClient(&golog.ApiClientConfig{
 			GormClient: c.config.GormClient,
 			TableName:  logTable,
 			LogClient:  c.config.LogClient,
