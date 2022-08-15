@@ -13,7 +13,7 @@ type ConfigClient struct {
 	AppKey     int              // key
 	AppSecret  string           // secret
 	GormClient *dorm.GormClient // 日志数据库
-	LogClient  *golog.GoLog     // 日志驱动
+	LogClient  *golog.ZapLog    // 日志驱动
 	LogDebug   bool             // 日志开关
 }
 type Client struct {
