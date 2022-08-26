@@ -51,7 +51,7 @@ func NewClient(storeId, appKey int, appSecret string, gormClientFun gormClientFu
 
 	gormClient := gormClientFun()
 	if gormClient.Db != nil {
-		c.log.logGormClient, err = golog.NewApiGormClient(func() (client *dorm.GormClient, tableName string) {
+		c.log.logGormClient, err = golog.NewApiGormClient(func() (*dorm.GormClient, string) {
 			return gormClient, logTable
 		}, debug)
 		if err != nil {
