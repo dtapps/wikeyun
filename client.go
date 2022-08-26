@@ -35,11 +35,11 @@ type Client struct {
 		appSecret string // secret
 	}
 	log struct {
-		gormClient     *dorm.GormClient  // 日志数据库
 		gorm           bool              // 日志开关
+		gormClient     *dorm.GormClient  // 日志数据库
 		logGormClient  *golog.ApiClient  // 日志服务
-		mongoClient    *dorm.MongoClient // 日志数据库
 		mongo          bool              // 日志开关
+		mongoClient    *dorm.MongoClient // 日志数据库
 		logMongoClient *golog.ApiClient  // 日志服务
 	}
 }
@@ -57,7 +57,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	c.requestClient = gorequest.NewHttp()
 
 	gormClient := config.GormClientFun()
-	if gormClient.Db != nil {
+	if gormClient != nil && gormClient.Db != nil {
 		c.log.logGormClient, err = golog.NewApiGormClient(func() (*dorm.GormClient, string) {
 			return gormClient, logTable
 		}, config.Debug)
@@ -65,11 +65,11 @@ func NewClient(config *ClientConfig) (*Client, error) {
 			return nil, err
 		}
 		c.log.gorm = true
+		c.log.gormClient = gormClient
 	}
-	c.log.gormClient = gormClient
 
 	mongoClient, databaseName := config.MongoClientFun()
-	if mongoClient.Db != nil {
+	if mongoClient != nil && mongoClient.Db != nil {
 		c.log.logMongoClient, err = golog.NewApiMongoClient(func() (*dorm.MongoClient, string, string) {
 			return mongoClient, databaseName, logTable
 		}, config.Debug)
@@ -77,8 +77,8 @@ func NewClient(config *ClientConfig) (*Client, error) {
 			return nil, err
 		}
 		c.log.mongo = true
+		c.log.mongoClient = mongoClient
 	}
-	c.log.mongoClient = mongoClient
 
 	xip := goip.GetOutsideIp(context.Background())
 	if xip != "" && xip != "0.0.0.0" {
