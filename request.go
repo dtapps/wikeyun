@@ -16,7 +16,7 @@ func (c *Client) request(ctx context.Context, url string, params map[string]inte
 	client := c.requestClient
 
 	// 设置请求地址
-	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, c.config.AppKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
+	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, c.GetAppKey(), sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
 
 	// 设置FORM格式
 	client.SetContentTypeForm()
@@ -31,8 +31,11 @@ func (c *Client) request(ctx context.Context, url string, params map[string]inte
 	}
 
 	// 日志
-	if c.config.GormClient.Db != nil {
-		go c.logClient.GormMiddleware(ctx, request, Version)
+	if c.log.gorm == true {
+		go c.log.gormClient.GormMiddleware(ctx, request, Version)
+	}
+	if c.log.mongo == true {
+		go c.log.mongoClient.GormMiddleware(ctx, request, Version)
 	}
 
 	return request, err
