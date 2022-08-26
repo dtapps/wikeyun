@@ -8,6 +8,23 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
+// client *dorm.GormClient
+type gormClientFun func() *dorm.GormClient
+
+// client *dorm.MongoClient
+// databaseName string
+type mongoClientFun func() (*dorm.MongoClient, string)
+
+// ClientConfig 实例配置
+type ClientConfig struct {
+	StoreId        int            // 店铺ID
+	AppKey         int            // key
+	AppSecret      string         // secret
+	GormClientFun  gormClientFun  // 日志配置
+	MongoClientFun mongoClientFun // 日志配置
+	Debug          bool           // 日志开关
+}
+
 // Client 实例
 type Client struct {
 	requestClient *gorequest.App // 请求服务
@@ -27,33 +44,23 @@ type Client struct {
 	}
 }
 
-// client *dorm.GormClient
-type gormClientFun func() *dorm.GormClient
-
-// client *dorm.MongoClient
-// databaseName string
-type mongoClientFun func() (*dorm.MongoClient, string)
-
 // NewClient 创建实例化
-// storeId 店铺ID
-// appKey key
-// appSecret secret
-func NewClient(storeId, appKey int, appSecret string, gormClientFun gormClientFun, mongoClientFun mongoClientFun, debug bool) (*Client, error) {
+func NewClient(config *ClientConfig) (*Client, error) {
 
 	var err error
 	c := &Client{}
 
-	c.config.storeId = storeId
-	c.config.appKey = appKey
-	c.config.appSecret = appSecret
+	c.config.storeId = config.StoreId
+	c.config.appKey = config.AppKey
+	c.config.appSecret = config.AppSecret
 
 	c.requestClient = gorequest.NewHttp()
 
-	gormClient := gormClientFun()
+	gormClient := config.GormClientFun()
 	if gormClient.Db != nil {
 		c.log.logGormClient, err = golog.NewApiGormClient(func() (*dorm.GormClient, string) {
 			return gormClient, logTable
-		}, debug)
+		}, config.Debug)
 		if err != nil {
 			return nil, err
 		}
@@ -61,11 +68,11 @@ func NewClient(storeId, appKey int, appSecret string, gormClientFun gormClientFu
 	}
 	c.log.gormClient = gormClient
 
-	mongoClient, databaseName := mongoClientFun()
+	mongoClient, databaseName := config.MongoClientFun()
 	if mongoClient.Db != nil {
 		c.log.logMongoClient, err = golog.NewApiMongoClient(func() (*dorm.MongoClient, string, string) {
 			return mongoClient, databaseName, logTable
-		}, debug)
+		}, config.Debug)
 		if err != nil {
 			return nil, err
 		}
