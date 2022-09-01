@@ -5,7 +5,7 @@ go 1.19
 require (
 	go.dtapp.net/dorm v1.0.30
 	go.dtapp.net/goip v1.0.28
-	go.dtapp.net/golog v1.0.44
+	go.dtapp.net/golog v1.0.45
 	go.dtapp.net/gorequest v1.0.27
 	go.dtapp.net/gostring v1.0.10
 )
