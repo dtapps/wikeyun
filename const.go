@@ -9,7 +9,6 @@ const (
 )
 
 const (
-	logTable = "wikeyun"
+	LogTable = "wikeyun"
+	Version  = "1.0.24"
 )
-
-const Version = "1.0.23"
