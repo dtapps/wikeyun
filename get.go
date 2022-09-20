@@ -18,6 +18,6 @@ func (c *Client) GetClientIp() string {
 	return c.config.clientIp
 }
 
-func (c *Client) GetLogGorm() *golog.ApiClient {
+func (c *Client) GetLog() *golog.ApiClient {
 	return c.log.client
 }
