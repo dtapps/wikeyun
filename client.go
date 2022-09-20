@@ -1,8 +1,6 @@
 package wikeyun
 
 import (
-	"context"
-	"go.dtapp.net/goip"
 	"go.dtapp.net/golog"
 	"go.dtapp.net/gorequest"
 )
@@ -22,7 +20,6 @@ type ClientConfig struct {
 type Client struct {
 	requestClient *gorequest.App // 请求服务
 	zapLog        *golog.ZapLog  // 日志服务
-	currentIp     string         // 当前ip
 	config        struct {
 		clientIp  string // 当前Ip
 		storeId   int    // 店铺ID
@@ -30,7 +27,7 @@ type Client struct {
 		appSecret string // secret
 	}
 	log struct {
-		gorm   bool             // 日志开关
+		status bool             // 状态
 		client *golog.ApiClient // 日志服务
 	}
 }
@@ -42,7 +39,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 
 	c.zapLog = config.ZapLog
 
-	c.currentIp = config.CurrentIp
+	c.config.clientIp = config.CurrentIp
 
 	c.config.storeId = config.StoreId
 	c.config.appKey = config.AppKey
@@ -53,12 +50,7 @@ func NewClient(config *ClientConfig) (*Client, error) {
 	apiGormClient := config.ApiGormClientFun()
 	if apiGormClient != nil {
 		c.log.client = apiGormClient
-		c.log.gorm = true
-	}
-
-	xip := goip.GetOutsideIp(context.Background())
-	if xip != "" && xip != "0.0.0.0" {
-		c.config.clientIp = xip
+		c.log.status = true
 	}
 
 	return c, nil
