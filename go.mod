@@ -6,7 +6,6 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	go.dtapp.net/golog v1.0.102
 	go.dtapp.net/gorequest v1.0.36
-	go.dtapp.net/gostring v1.0.10
 )
 
 require (
@@ -71,6 +70,7 @@ require (
 	go.dtapp.net/dorm v1.0.54 // indirect
 	go.dtapp.net/goip v1.0.39 // indirect
 	go.dtapp.net/gorandom v1.0.1 // indirect
+	go.dtapp.net/gostring v1.0.10 // indirect
 	go.dtapp.net/gotime v1.0.5 // indirect
 	go.dtapp.net/gotrace_id v1.0.6 // indirect
 	go.dtapp.net/gourl v1.0.0 // indirect
@@ -78,12 +78,12 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
-	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.4.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/mysql v1.4.4 // indirect
