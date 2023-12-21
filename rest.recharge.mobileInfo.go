@@ -50,7 +50,7 @@ func (c *Client) RestRechargeMobileInfo(ctx context.Context, mobile string, notM
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("mobile", mobile) // 手机号
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Recharge/mobileInfo", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/mobileInfo", params)
 	if err != nil {
 		return newRestRechargeMobileInfoResult(RestRechargeMobileInfoResponse{}, request.ResponseBody, request), err
 	}

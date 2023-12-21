@@ -40,7 +40,7 @@ func (c *Client) RestPowerEditCard(ctx context.Context, cardID int64, cardNum st
 	params.Set("city", city)         // 城市
 	params.Set("type", Type)         // 0国家电网 1南方电网
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/editCard", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/editCard", params)
 	if err != nil {
 		return newRestPowerEditCardResult(RestPowerEditCardResponse{}, request.ResponseBody, request), err
 	}

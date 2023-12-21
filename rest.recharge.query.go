@@ -45,7 +45,7 @@ func (c *Client) RestRechargeQuery(ctx context.Context, notMustParams ...goreque
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("store_id", c.GetStoreId()) // 店铺ID
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Recharge/query", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/query", params)
 	if err != nil {
 		return newRestRechargeQueryResult(RestRechargeQueryResponse{}, request.ResponseBody, request), err
 	}

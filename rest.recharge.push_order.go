@@ -43,7 +43,7 @@ func (c *Client) RestRechargePushOrder(ctx context.Context, mobile string, order
 	params.Set("recharge_type", rechargeType) // 类型 1快充 0慢充
 	params.Set("notify_url", notifyUrl)       // 回调通知地址，用于订单状态通知
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Recharge/pushOrder", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/pushOrder", params)
 	if err != nil {
 		return newRestRechargePushOrderResult(RestRechargePushOrderResponse{}, request.ResponseBody, request), err
 	}

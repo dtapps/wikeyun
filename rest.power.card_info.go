@@ -39,7 +39,7 @@ func (c *Client) RestPowerCardInfo(ctx context.Context, cardID int64, notMustPar
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("card_id", cardID) // 充值卡ID
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/cardInfo", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/cardInfo", params)
 	if err != nil {
 		return newRestPowerCardInfoResult(RestPowerCardInfoResponse{}, request.ResponseBody, request), err
 	}

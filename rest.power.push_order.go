@@ -42,7 +42,7 @@ func (c *Client) RestPowerPushOrder(ctx context.Context, cardID int64, orderNo s
 	params.Set("amount", amount)              // 充值金额，支持100,200,300,400,500,600,800,1000
 	params.Set("recharge_type", rechargeType) //  类型 1快充 0慢充
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/pushOrder", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/pushOrder", params)
 	if err != nil {
 		return newRestPowerPushOrderResult(RestPowerPushOrderResponse{}, request.ResponseBody, request), err
 	}

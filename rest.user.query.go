@@ -33,7 +33,7 @@ func (c *Client) RestUserQuery(ctx context.Context, notMustParams ...gorequest.P
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/User/query", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/User/query", params)
 	if err != nil {
 		return newRestUserQueryResult(RestUserQueryResponse{}, request.ResponseBody, request), err
 	}

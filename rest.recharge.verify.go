@@ -34,7 +34,7 @@ func (c *Client) RestRechargeVerify(ctx context.Context, mobile string, amount i
 	params.Set("amount", amount)              //	需要充值的金额
 	params.Set("recharge_type", rechargeType) // 充值类型
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Recharge/verify", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/verify", params)
 	if err != nil {
 		return newRestRechargeVerifyResult(RestRechargeVerifyResponse{}, request.ResponseBody, request), err
 	}

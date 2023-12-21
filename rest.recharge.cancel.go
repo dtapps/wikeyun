@@ -30,7 +30,7 @@ func (c *Client) RestRechargeCancel(ctx context.Context, orderNumber string, not
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("order_number", orderNumber) // 取消的单号，多个用英文逗号隔开
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Recharge/cancel", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/cancel", params)
 	if err != nil {
 		return newRestRechargeCancelResult(RestRechargeCancelResponse{}, request.ResponseBody, request), err
 	}

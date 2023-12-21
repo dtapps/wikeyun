@@ -31,7 +31,7 @@ func (c *Client) RestPowerDelCard(ctx context.Context, cardID int64, notMustPara
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("card_id", cardID)
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/delCard", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/delCard", params)
 	if err != nil {
 		return newRestPowerDelCardResult(RestPowerDelCardResponse{}, request.ResponseBody, request), err
 	}

@@ -50,7 +50,7 @@ func (c *Client) RestPowerAddCard(ctx context.Context, cardNum string, province 
 	params.Set("city", city)               // 城市，带市
 	params.Set("type", Type)               // 0国家电网 1南方电网
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/addCard", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/addCard", params)
 	if err != nil {
 		return newRestPowerAddCardResult(RestPowerAddCardResponse{}, request.ResponseBody, request), err
 	}

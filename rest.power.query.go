@@ -44,7 +44,7 @@ func (c *Client) RestPowerQuery(ctx context.Context, notMustParams ...gorequest.
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("store_id", c.GetStoreId()) // 店铺ID
 	// 请求
-	request, err := c.request(ctx, apiUrl+"/rest/Power/query", params)
+	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/query", params)
 	if err != nil {
 		return newRestPowerQueryResult(RestPowerQueryResponse{}, request.ResponseBody, request), err
 	}
