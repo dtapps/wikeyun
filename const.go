@@ -10,5 +10,4 @@ const (
 
 const (
 	LogTable = "wikeyun"
-	Version  = "1.0.31"
 )

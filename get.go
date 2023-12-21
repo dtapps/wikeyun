@@ -1,12 +1,10 @@
 package wikeyun
 
-import "go.dtapp.net/golog"
-
-func (c *Client) GetStoreId() int {
+func (c *Client) GetStoreId() int64 {
 	return c.config.storeId
 }
 
-func (c *Client) GetAppKey() int {
+func (c *Client) GetAppKey() int64 {
 	return c.config.appKey
 }
 
@@ -16,8 +14,4 @@ func (c *Client) GetAppSecret() string {
 
 func (c *Client) GetClientIp() string {
 	return c.config.clientIp
-}
-
-func (c *Client) GetLog() *golog.ApiClient {
-	return c.log.client
 }
