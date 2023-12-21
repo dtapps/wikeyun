@@ -6,7 +6,6 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	go.dtapp.net/golog v1.0.102
 	go.dtapp.net/gorequest v1.0.36
-	go.dtapp.net/gostring v1.0.10
 )
 
 require (
@@ -71,6 +70,7 @@ require (
 	go.dtapp.net/dorm v1.0.54 // indirect
 	go.dtapp.net/goip v1.0.39 // indirect
 	go.dtapp.net/gorandom v1.0.1 // indirect
+	go.dtapp.net/gostring v1.0.10 // indirect
 	go.dtapp.net/gotime v1.0.5 // indirect
 	go.dtapp.net/gotrace_id v1.0.6 // indirect
 	go.dtapp.net/gourl v1.0.0 // indirect
@@ -89,7 +89,7 @@ require (
 	gorm.io/driver/mysql v1.4.4 // indirect
 	gorm.io/driver/postgres v1.4.5 // indirect
 	gorm.io/gorm v1.24.2 // indirect
-	mellium.im/sasl v0.3.0 // indirect
+	mellium.im/sasl v0.3.1 // indirect
 	xorm.io/builder v0.3.12 // indirect
 	xorm.io/xorm v1.3.2 // indirect
 )
