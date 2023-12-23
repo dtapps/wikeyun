@@ -26,26 +26,26 @@ func (c *Client) sign(param gorequest.Params) respSign {
 	v := "1.0"
 	format := "json"
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
-	param.Set("v", v)                    // 客户端接口版本，目前是1.0
-	param.Set("format", format)          // 默认json
-	param.Set("app_key", c.GetAppKey())  // 应用唯一表示
-	param.Set("client", c.GetClientIp()) // 客户端请求ip
-	param.Set("timestamp", timestamp)    // unix时间戳（秒单位）
+	param.Set("v", v)                      // 客户端接口版本，目前是1.0
+	param.Set("format", format)            // 默认json
+	param.Set("app_key", c.config.appKey)  // 应用唯一表示
+	param.Set("client", c.config.clientIp) // 客户端请求ip
+	param.Set("timestamp", timestamp)      // unix时间戳（秒单位）
 	// 排序所有的 key
 	var keys []string
 	for key := range param {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
-	signStr := c.GetAppSecret()
+	signStr := c.config.appSecret
 	for _, key := range keys {
 		signStr += key + gostring.GetString(param.Get(key))
 	}
-	signStr += c.GetAppSecret()
+	signStr += c.config.appSecret
 	return respSign{
-		AppKey:    c.GetAppKey(),
+		AppKey:    c.config.appKey,
 		Timestamp: timestamp,
-		Client:    c.GetClientIp(),
+		Client:    c.config.clientIp,
 		V:         v,
 		Format:    format,
 		Sign:      c.createSign(signStr),

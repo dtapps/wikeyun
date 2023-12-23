@@ -36,7 +36,7 @@ func newRestRechargePushOrderResult(result RestRechargePushOrderResponse, body [
 func (c *Client) RestRechargePushOrder(ctx context.Context, mobile string, orderNo string, money int64, rechargeType int64, notifyUrl string, notMustParams ...gorequest.Params) (*RestRechargePushOrderResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.GetStoreId())    // 店铺ID
+	params.Set("store_id", c.config.storeId)  // 店铺ID
 	params.Set("mobile", mobile)              // 充值手机号,虚拟号,协号转网不支持充值
 	params.Set("order_no", orderNo)           // 第三方单号
 	params.Set("money", money)                // 充值金额，目前有50，100，200三种，具体联系客服咨询
