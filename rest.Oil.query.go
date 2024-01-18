@@ -33,11 +33,11 @@ func newRestOilQueryResult(result RestOilQueryResponse, body []byte, http gorequ
 // RestOilQuery 油卡订单查询
 // order_number = 平台单号，与商户单号二选一
 // order_no = 商户单号
-// store_id = 店铺ID
 // https://open.wikeyun.cn/#/apiDocument/9/document/368
 func (c *Client) RestOilQuery(ctx context.Context, notMustParams ...gorequest.Params) (*RestOilQueryResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("store_id", c.config.storeId) // 店铺ID
 	// 请求
 	request, err := c.request(ctx, c.config.apiUrl+"/rest/Oil/query", params)
 	if err != nil {

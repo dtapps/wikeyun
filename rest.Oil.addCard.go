@@ -23,7 +23,6 @@ func newRestOilAddCardResult(result RestOilAddCardResponse, body []byte, http go
 }
 
 // RestOilAddCard 添加油卡充值卡
-// store_id = 店铺ID
 // card_id = 充值卡ID
 // card_num = 卡号
 // name = 姓名
@@ -34,6 +33,7 @@ func newRestOilAddCardResult(result RestOilAddCardResponse, body []byte, http go
 func (c *Client) RestOilAddCard(ctx context.Context, notMustParams ...gorequest.Params) (*RestOilAddCardResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("store_id", c.config.storeId) // 店铺ID
 	// 请求
 	request, err := c.request(ctx, c.config.apiUrl+"/rest/Oil/addCard", params)
 	if err != nil {

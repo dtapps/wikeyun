@@ -12,6 +12,6 @@
 
 #### 安装
 
-```go
-go get -v -u go.dtapp.net/wikeyun@1.0.33
+```shell
+go get -v -u go.dtapp.net/wikeyun@1.0.34
 ```

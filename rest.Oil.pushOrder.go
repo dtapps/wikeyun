@@ -28,7 +28,6 @@ func newRestOilPushOrderResult(result RestOilPushOrderResponse, body []byte, htt
 }
 
 // RestOilPushOrder 油卡充值
-// store_id = 店铺ID
 // order_no = 商户单号
 // amount = 充值金额
 // recharge_type = 充值类型 1快充 0慢充
@@ -38,6 +37,7 @@ func newRestOilPushOrderResult(result RestOilPushOrderResponse, body []byte, htt
 func (c *Client) RestOilPushOrder(ctx context.Context, notMustParams ...gorequest.Params) (*RestOilPushOrderResult, error) {
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+	params.Set("store_id", c.config.storeId) // 店铺ID
 	// 请求
 	request, err := c.request(ctx, c.config.apiUrl+"/rest/Oil/pushOrder", params)
 	if err != nil {
