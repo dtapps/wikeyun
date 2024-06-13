@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOilCardInfoResponse struct {
@@ -33,15 +34,26 @@ func newRestOilCardInfoResult(result RestOilCardInfoResponse, body []byte, http 
 // card_id = 充值卡ID
 // https://open.wikeyun.cn/#/apiDocument/9/document/373
 func (c *Client) RestOilCardInfo(ctx context.Context, notMustParams ...gorequest.Params) (*RestOilCardInfoResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/Oil/cardInfo")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/Oil/cardInfo", params)
+	request, err := c.request(ctx, "rest/Oil/cardInfo", params)
 	if err != nil {
 		return newRestOilCardInfoResult(RestOilCardInfoResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestOilCardInfoResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestOilCardInfoResult(response, request.ResponseBody, request), err
 }

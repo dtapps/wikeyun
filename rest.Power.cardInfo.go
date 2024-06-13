@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestPowerCardInfoResponse struct {
@@ -35,16 +36,27 @@ func newRestPowerCardInfoResult(result RestPowerCardInfoResponse, body []byte, h
 // card_id = 充值卡ID
 // https://open.wikeyun.cn/#/apiDocument/9/document/333
 func (c *Client) RestPowerCardInfo(ctx context.Context, cardID int64, notMustParams ...gorequest.Params) (*RestPowerCardInfoResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/Power/cardInfo")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("card_id", cardID) // 充值卡ID
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/Power/cardInfo", params)
+	request, err := c.request(ctx, "rest/Power/cardInfo", params)
 	if err != nil {
 		return newRestPowerCardInfoResult(RestPowerCardInfoResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestPowerCardInfoResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestPowerCardInfoResult(response, request.ResponseBody, request), err
 }

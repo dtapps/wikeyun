@@ -1,5 +1,5 @@
 package wikeyun
 
 var (
-	Version = "1.0.37"
+	Version = "1.0.38"
 )

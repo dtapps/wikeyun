@@ -1,7 +1,6 @@
 package wikeyun
 
 import (
-	"go.dtapp.net/godecimal"
 	"go.dtapp.net/gojson"
 	"net/http"
 )
@@ -21,17 +20,6 @@ type ResponseRestRechargePushOrderNotifyHttp struct {
 // RestRechargePushOrderNotifyHttp 话费充值推送 - 回调通知
 // https://open.wikeyun.cn/#/document/1/article/302
 func (c *Client) RestRechargePushOrderNotifyHttp(w http.ResponseWriter, r *http.Request) (validateJson ResponseRestRechargePushOrderNotifyHttp, err error) {
-	if r.Method == http.MethodPost {
-		err = gojson.NewDecoder(r.Body).Decode(&validateJson)
-	} else if r.Method == http.MethodGet {
-		validateJson.Status = godecimal.NewString(r.URL.Query().Get("status")).Int64()
-		validateJson.Mobile = r.URL.Query().Get("mobile")
-		validateJson.OrderNo = r.URL.Query().Get("order_no")
-		validateJson.OrderNumber = r.URL.Query().Get("order_number")
-		validateJson.Amount = r.URL.Query().Get("amount")
-		validateJson.Fanli = godecimal.NewString(r.URL.Query().Get("fanli")).Float64()
-		validateJson.CostPrice = godecimal.NewString(r.URL.Query().Get("cost_price")).Float64()
-		validateJson.Sign = r.URL.Query().Get("sign")
-	}
+	err = gojson.NewDecoder(r.Body).Decode(&validateJson)
 	return validateJson, err
 }

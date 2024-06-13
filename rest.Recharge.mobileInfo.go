@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestRechargeMobileInfoResponse struct {
@@ -46,16 +47,27 @@ func newRestRechargeMobileInfoResult(result RestRechargeMobileInfoResponse, body
 // mobile = 手机号
 // https://open.wikeyun.cn/#/apiDocument/9/document/374
 func (c *Client) RestRechargeMobileInfo(ctx context.Context, mobile string, notMustParams ...gorequest.Params) (*RestRechargeMobileInfoResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/Recharge/mobileInfo")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("mobile", mobile) // 手机号
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/Recharge/mobileInfo", params)
+	request, err := c.request(ctx, "rest/Recharge/mobileInfo", params)
 	if err != nil {
 		return newRestRechargeMobileInfoResult(RestRechargeMobileInfoResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestRechargeMobileInfoResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestRechargeMobileInfoResult(response, request.ResponseBody, request), err
 }

@@ -3,7 +3,10 @@ package wikeyun
 import (
 	"context"
 	"fmt"
+	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 )
 
 // 请求接口
@@ -12,27 +15,28 @@ func (c *Client) request(ctx context.Context, url string, param gorequest.Params
 	// 签名
 	sign := c.sign(param)
 
-	// 创建请求
-	client := gorequest.NewHttp()
+	// 拼接url
+	uri := fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", c.config.apiUrl+url, c.config.appKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign)
 
 	// 设置请求地址
-	client.SetUri(fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", url, c.config.appKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign))
+	c.httpClient.SetUri(uri)
 
 	// 设置FORM格式
-	client.SetContentTypeForm()
+	c.httpClient.SetContentTypeForm()
 
 	// 设置参数
-	client.SetParams(param)
+	c.httpClient.SetParams(param)
+
+	// OpenTelemetry链路追踪
+	c.TraceSetAttributes(attribute.String("http.url", uri))
+	c.TraceSetAttributes(attribute.String("http.params", gojson.JsonEncodeNoError(param)))
 
 	// 发起请求
-	request, err := client.Post(ctx)
+	request, err := c.httpClient.Post(ctx)
 	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
 		return gorequest.Response{}, err
-	}
-
-	// 日志
-	if c.gormLog.status {
-		go c.gormLog.client.Middleware(ctx, request)
 	}
 
 	return request, err

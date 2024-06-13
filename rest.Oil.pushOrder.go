@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOilPushOrderResponse struct {
@@ -35,16 +36,27 @@ func newRestOilPushOrderResult(result RestOilPushOrderResponse, body []byte, htt
 // cardId = 卡号ID，通过新增获取
 // https://open.wikeyun.cn/#/apiDocument/9/document/367
 func (c *Client) RestOilPushOrder(ctx context.Context, notMustParams ...gorequest.Params) (*RestOilPushOrderResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/Oil/pushOrder")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("store_id", c.config.storeId) // 店铺ID
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/Oil/pushOrder", params)
+	request, err := c.request(ctx, "rest/Oil/pushOrder", params)
 	if err != nil {
 		return newRestOilPushOrderResult(RestOilPushOrderResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestOilPushOrderResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestOilPushOrderResult(response, request.ResponseBody, request), err
 }

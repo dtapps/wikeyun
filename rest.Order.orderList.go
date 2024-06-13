@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOrderOrderListResponse struct {
@@ -37,15 +38,26 @@ func newRestOrderOrderListResult(result RestOrderOrderListResponse, body []byte,
 // end_time = 结束时间，linux时间戳10位，跟开始时间相差不能超过2小时
 // https://open.wikeyun.cn/#/apiDocument/13/document/364
 func (c *Client) RestOrderOrderList(ctx context.Context, notMustParams ...gorequest.Params) (*RestOrderOrderListResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/Order/orderList")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/Order/orderList", params)
+	request, err := c.request(ctx, "rest/Order/orderList", params)
 	if err != nil {
 		return newRestOrderOrderListResult(RestOrderOrderListResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestOrderOrderListResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestOrderOrderListResult(response, request.ResponseBody, request), err
 }

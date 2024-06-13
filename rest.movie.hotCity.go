@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestMovieHotCityResponse struct {
@@ -30,16 +31,27 @@ func newRestMovieHotCityResult(result RestMovieHotCityResponse, body []byte, htt
 // RestMovieHotCity 定位--获取热门城市
 // https://open.wikeyun.cn/#/apiDocument/4/document/301
 func (c *Client) RestMovieHotCity(ctx context.Context, notMustParams ...gorequest.Params) (*RestMovieHotCityResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/movie/hotCity")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
 	params.Set("store_id", c.config.storeId) // 店铺ID
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/movie/hotCity", params)
+	request, err := c.request(ctx, "rest/movie/hotCity", params)
 	if err != nil {
 		return newRestMovieHotCityResult(RestMovieHotCityResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestMovieHotCityResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestMovieHotCityResult(response, request.ResponseBody, request), err
 }

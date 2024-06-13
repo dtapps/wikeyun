@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type RestUserQueryResponse struct {
@@ -30,15 +31,26 @@ func newRestUserQueryResult(result RestUserQueryResponse, body []byte, http gore
 // RestUserQuery 用户信息
 // https://open.wikeyun.cn/#/apiDocument/10/document/336
 func (c *Client) RestUserQuery(ctx context.Context, notMustParams ...gorequest.Params) (*RestUserQueryResult, error) {
+
+	// OpenTelemetry链路追踪
+	ctx = c.TraceStartSpan(ctx, "rest/User/query")
+	defer c.TraceEndSpan()
+
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
+
 	// 请求
-	request, err := c.request(ctx, c.config.apiUrl+"/rest/User/query", params)
+	request, err := c.request(ctx, "rest/User/query", params)
 	if err != nil {
 		return newRestUserQueryResult(RestUserQueryResponse{}, request.ResponseBody, request), err
 	}
+
 	// 定义
 	var response RestUserQueryResponse
 	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
+	}
 	return newRestUserQueryResult(response, request.ResponseBody, request), err
 }
