@@ -1,6 +1,7 @@
 package wikeyun
 
 import (
+	"context"
 	"go.dtapp.net/gojson"
 	"net/http"
 )
@@ -19,7 +20,7 @@ type ResponseRestRechargePushOrderNotifyHttp struct {
 
 // RestRechargePushOrderNotifyHttp 话费充值推送 - 回调通知
 // https://open.wikeyun.cn/#/document/1/article/302
-func (c *Client) RestRechargePushOrderNotifyHttp(w http.ResponseWriter, r *http.Request) (validateJson ResponseRestRechargePushOrderNotifyHttp, err error) {
+func (c *Client) RestRechargePushOrderNotifyHttp(ctx context.Context, w http.ResponseWriter, r *http.Request) (validateJson ResponseRestRechargePushOrderNotifyHttp, err error) {
 	err = gojson.NewDecoder(r.Body).Decode(&validateJson)
 	return validateJson, err
 }

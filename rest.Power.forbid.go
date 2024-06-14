@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestPowerForbidResponse struct {
@@ -35,21 +33,11 @@ func (c *Client) RestPowerForbid(ctx context.Context, status int64, notMustParam
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.config.storeId) // 店铺ID
-	params.Set("status", status)             // 1 禁用 0启用
+	params.Set("store_id", c.GetStoreId()) // 店铺ID
+	params.Set("status", status)           // 1 禁用 0启用
 
 	// 请求
-	request, err := c.request(ctx, "rest/Power/forbid", params)
-	if err != nil {
-		return newRestPowerForbidResult(RestPowerForbidResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestPowerForbidResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Power/forbid", params, &response)
 	return newRestPowerForbidResult(response, request.ResponseBody, request), err
 }

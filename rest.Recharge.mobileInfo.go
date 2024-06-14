@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestRechargeMobileInfoResponse struct {
@@ -57,17 +55,7 @@ func (c *Client) RestRechargeMobileInfo(ctx context.Context, mobile string, notM
 	params.Set("mobile", mobile) // 手机号
 
 	// 请求
-	request, err := c.request(ctx, "rest/Recharge/mobileInfo", params)
-	if err != nil {
-		return newRestRechargeMobileInfoResult(RestRechargeMobileInfoResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestRechargeMobileInfoResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Recharge/mobileInfo", params, &response)
 	return newRestRechargeMobileInfoResult(response, request.ResponseBody, request), err
 }

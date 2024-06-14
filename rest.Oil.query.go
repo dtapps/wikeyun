@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOilQueryResponse struct {
@@ -43,20 +41,10 @@ func (c *Client) RestOilQuery(ctx context.Context, notMustParams ...gorequest.Pa
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.config.storeId) // 店铺ID
+	params.Set("store_id", c.GetStoreId()) // 店铺ID
 
 	// 请求
-	request, err := c.request(ctx, "rest/Oil/query", params)
-	if err != nil {
-		return newRestOilQueryResult(RestOilQueryResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestOilQueryResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Oil/query", params, &response)
 	return newRestOilQueryResult(response, request.ResponseBody, request), err
 }

@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOilCancelResponse struct {
@@ -36,17 +34,7 @@ func (c *Client) RestOilCancel(ctx context.Context, notMustParams ...gorequest.P
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
-	request, err := c.request(ctx, "rest/Oil/cancel", params)
-	if err != nil {
-		return newRestOilCancelResult(RestOilCancelResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestOilCancelResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Oil/cancel", params, &response)
 	return newRestOilCancelResult(response, request.ResponseBody, request), err
 }

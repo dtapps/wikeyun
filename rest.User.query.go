@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestUserQueryResponse struct {
@@ -40,17 +38,7 @@ func (c *Client) RestUserQuery(ctx context.Context, notMustParams ...gorequest.P
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
-	request, err := c.request(ctx, "rest/User/query", params)
-	if err != nil {
-		return newRestUserQueryResult(RestUserQueryResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestUserQueryResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/User/query", params, &response)
 	return newRestUserQueryResult(response, request.ResponseBody, request), err
 }

@@ -10,13 +10,13 @@ import (
 )
 
 // 请求接口
-func (c *Client) request(ctx context.Context, url string, param gorequest.Params) (gorequest.Response, error) {
+func (c *Client) request(ctx context.Context, url string, param gorequest.Params, response any) (gorequest.Response, error) {
 
 	// 签名
 	sign := c.sign(param)
 
 	// 拼接url
-	uri := fmt.Sprintf("%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", c.config.apiUrl+url, c.config.appKey, sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign)
+	uri := fmt.Sprintf("%s%s?app_key=%d&timestamp=%s&client=%s&format=%s&v=%s&sign=%s", c.GetApiUrl(), url, c.GetAppKey(), sign.Timestamp, sign.Client, sign.Format, sign.V, sign.Sign)
 
 	// 设置请求地址
 	c.httpClient.SetUri(uri)
@@ -37,6 +37,13 @@ func (c *Client) request(ctx context.Context, url string, param gorequest.Params
 		c.TraceRecordError(err)
 		c.TraceSetStatus(codes.Error, err.Error())
 		return gorequest.Response{}, err
+	}
+
+	// 解析响应
+	err = gojson.Unmarshal(request.ResponseBody, &response)
+	if err != nil {
+		c.TraceRecordError(err)
+		c.TraceSetStatus(codes.Error, err.Error())
 	}
 
 	return request, err

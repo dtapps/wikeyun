@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestPowerDelCardResponse struct {
@@ -38,17 +36,7 @@ func (c *Client) RestPowerDelCard(ctx context.Context, cardID int64, notMustPara
 	params.Set("card_id", cardID)
 
 	// 请求
-	request, err := c.request(ctx, "rest/Power/delCard", params)
-	if err != nil {
-		return newRestPowerDelCardResult(RestPowerDelCardResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestPowerDelCardResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Power/delCard", params, &response)
 	return newRestPowerDelCardResult(response, request.ResponseBody, request), err
 }

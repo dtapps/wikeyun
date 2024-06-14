@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestOrderOrderListResponse struct {
@@ -47,17 +45,7 @@ func (c *Client) RestOrderOrderList(ctx context.Context, notMustParams ...gorequ
 	params := gorequest.NewParamsWith(notMustParams...)
 
 	// 请求
-	request, err := c.request(ctx, "rest/Order/orderList", params)
-	if err != nil {
-		return newRestOrderOrderListResult(RestOrderOrderListResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestOrderOrderListResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Order/orderList", params, &response)
 	return newRestOrderOrderListResult(response, request.ResponseBody, request), err
 }

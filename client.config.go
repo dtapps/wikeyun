@@ -4,18 +4,39 @@ import (
 	"go.dtapp.net/gorequest"
 )
 
-func (c *Client) SetStoreId(storeId int64) *Client {
-	c.config.storeId = storeId
+func (c *Client) GetApiUrl() string {
+	return c.config.apiUrl
+}
+
+func (c *Client) SetApiUrl(v string) *Client {
+	c.config.apiUrl = v
 	return c
 }
 
-func (c *Client) SetAppKey(appKey int64) *Client {
-	c.config.appKey = appKey
+func (c *Client) GetStoreId() int64 {
+	return c.config.storeId
+}
+
+func (c *Client) SetStoreId(v int64) *Client {
+	c.config.storeId = v
 	return c
 }
 
-func (c *Client) SetAppSecret(appSecret string) *Client {
-	c.config.appSecret = appSecret
+func (c *Client) GetAppKey() int64 {
+	return c.config.appKey
+}
+
+func (c *Client) SetAppKey(v int64) *Client {
+	c.config.appKey = v
+	return c
+}
+
+func (c *Client) GetAppSecret() string {
+	return c.config.appSecret
+}
+
+func (c *Client) SetAppSecret(v string) *Client {
+	c.config.appSecret = v
 	return c
 }
 

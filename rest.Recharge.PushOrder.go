@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestRechargePushOrderResponse struct {
@@ -42,7 +40,7 @@ func (c *Client) RestRechargePushOrder(ctx context.Context, mobile string, order
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.config.storeId)  // 店铺ID
+	params.Set("store_id", c.GetStoreId())    // 店铺ID
 	params.Set("mobile", mobile)              // 充值手机号,虚拟号,协号转网不支持充值
 	params.Set("order_no", orderNo)           // 第三方单号
 	params.Set("money", money)                // 充值金额，目前有50，100，200三种，具体联系客服咨询
@@ -50,17 +48,7 @@ func (c *Client) RestRechargePushOrder(ctx context.Context, mobile string, order
 	params.Set("notify_url", notifyUrl)       // 回调通知地址，用于订单状态通知
 
 	// 请求
-	request, err := c.request(ctx, "rest/Recharge/pushOrder", params)
-	if err != nil {
-		return newRestRechargePushOrderResult(RestRechargePushOrderResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestRechargePushOrderResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Recharge/pushOrder", params, &response)
 	return newRestRechargePushOrderResult(response, request.ResponseBody, request), err
 }

@@ -3,7 +3,6 @@ module go.dtapp.net/wikeyun
 go 1.22.3
 
 require (
-	go.dtapp.net/godecimal v1.0.11
 	go.dtapp.net/gojson v1.0.4
 	go.dtapp.net/gorequest v1.0.65
 	go.dtapp.net/gostring v1.0.15

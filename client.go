@@ -29,11 +29,11 @@ type Client struct {
 
 // NewClient 创建实例化
 func NewClient(config *ClientConfig) (*Client, error) {
+	c := &Client{}
 
 	if config.ApiUrl == "" {
 		return nil, errors.New("接口地址不能为空")
 	}
-	c := &Client{}
 
 	c.httpClient = gorequest.NewHttp()
 

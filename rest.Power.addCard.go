@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestPowerAddCardResponse struct {
@@ -50,24 +48,14 @@ func (c *Client) RestPowerAddCard(ctx context.Context, cardNum string, province 
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.config.storeId) // 店铺ID
-	params.Set("card_num", cardNum)          // 用户电费户号
-	params.Set("province", province)         // 省份，带省
-	params.Set("city", city)                 // 城市，带市
-	params.Set("type", Type)                 // 0国家电网 1南方电网
+	params.Set("store_id", c.GetStoreId()) // 店铺ID
+	params.Set("card_num", cardNum)        // 用户电费户号
+	params.Set("province", province)       // 省份，带省
+	params.Set("city", city)               // 城市，带市
+	params.Set("type", Type)               // 0国家电网 1南方电网
 
 	// 请求
-	request, err := c.request(ctx, "rest/Power/addCard", params)
-	if err != nil {
-		return newRestPowerAddCardResult(RestPowerAddCardResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestPowerAddCardResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Power/addCard", params, &response)
 	return newRestPowerAddCardResult(response, request.ResponseBody, request), err
 }

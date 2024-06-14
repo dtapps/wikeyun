@@ -1,6 +1,7 @@
 package wikeyun
 
 import (
+	"context"
 	"go.dtapp.net/gojson"
 	"net/http"
 )
@@ -19,7 +20,7 @@ type ResponseRestPowerPushOrderNotifyHttp struct {
 
 // RestPowerPushOrderNotifyHttp 电费充值API - 回调通知
 // https://open.wikeyun.cn/#/document/1/article/303
-func (c *Client) RestPowerPushOrderNotifyHttp(w http.ResponseWriter, r *http.Request) (validateJson ResponseRestPowerPushOrderNotifyHttp, err error) {
+func (c *Client) RestPowerPushOrderNotifyHttp(ctx context.Context, w http.ResponseWriter, r *http.Request) (validateJson ResponseRestPowerPushOrderNotifyHttp, err error) {
 	err = gojson.NewDecoder(r.Body).Decode(&validateJson)
 	return validateJson, err
 }

@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestV2MovieGetAllCityResponse struct {
@@ -45,20 +43,10 @@ func (c *Client) RestV2MovieGetAllCity(ctx context.Context, notMustParams ...gor
 
 	// 参数
 	params := gorequest.NewParamsWith(notMustParams...)
-	params.Set("store_id", c.config.storeId) // 店铺ID
+	params.Set("store_id", c.GetStoreId()) // 店铺ID
 
 	// 请求
-	request, err := c.request(ctx, "rest/v2/movie/getAllCity", params)
-	if err != nil {
-		return newRestV2MovieGetAllCityResult(RestV2MovieGetAllCityResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestV2MovieGetAllCityResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/v2/movie/getAllCity", params, &response)
 	return newRestV2MovieGetAllCityResult(response, request.ResponseBody, request), err
 }

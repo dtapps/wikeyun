@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestRechargeVerifyResponse struct {
@@ -41,17 +39,7 @@ func (c *Client) RestRechargeVerify(ctx context.Context, mobile string, amount i
 	params.Set("recharge_type", rechargeType) // 充值类型
 
 	// 请求
-	request, err := c.request(ctx, "rest/Recharge/verify", params)
-	if err != nil {
-		return newRestRechargeVerifyResult(RestRechargeVerifyResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestRechargeVerifyResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Recharge/verify", params, &response)
 	return newRestRechargeVerifyResult(response, request.ResponseBody, request), err
 }

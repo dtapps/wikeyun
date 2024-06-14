@@ -2,9 +2,7 @@ package wikeyun
 
 import (
 	"context"
-	"go.dtapp.net/gojson"
 	"go.dtapp.net/gorequest"
-	"go.opentelemetry.io/otel/codes"
 )
 
 type RestPowerCancelResponse struct {
@@ -37,17 +35,7 @@ func (c *Client) RestPowerCancel(ctx context.Context, orderNumber string, notMus
 	params.Set("order_number", orderNumber) // 取消的单号，多个用英文逗号隔开
 
 	// 请求
-	request, err := c.request(ctx, "rest/Power/cancel", params)
-	if err != nil {
-		return newRestPowerCancelResult(RestPowerCancelResponse{}, request.ResponseBody, request), err
-	}
-
-	// 定义
 	var response RestPowerCancelResponse
-	err = gojson.Unmarshal(request.ResponseBody, &response)
-	if err != nil {
-		c.TraceRecordError(err)
-		c.TraceSetStatus(codes.Error, err.Error())
-	}
+	request, err := c.request(ctx, "rest/Power/cancel", params, &response)
 	return newRestPowerCancelResult(response, request.ResponseBody, request), err
 }
